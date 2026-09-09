@@ -8,10 +8,14 @@ void DrawGrid(int screensize)
         DrawLine(75, 225+(i*150), screensize-75, 225+(i*150), BEIGE);
     }
 }
+
 enum Cell {EMPTY, X, O};
 Cell board[3][3] = {EMPTY};
 bool is_player_turn = true;
-
+Cell PlayerMark = X;
+Cell AiMark = O;
+enum GameStatus {PLAYING, PLAYER_WIN, AI_WIN, DRAW};
+GameStatus game_status = PLAYING;
 
 void PlayerInput(int screenSize) {
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
@@ -20,7 +24,7 @@ void PlayerInput(int screenSize) {
                     int col = ((int)mouse.x - 75) / 150;
                     int row = ((int)mouse.y - 75) / 150;
                     if (board[row][col] == EMPTY && is_player_turn) {
-                        board[row][col] = X;
+                        board[row][col] = PlayerMark;
                         is_player_turn = false;
                     }
                 }
@@ -32,7 +36,7 @@ void AiMove(int screenSize) {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == EMPTY) {
-                    board[row][col] = O;
+                    board[row][col] = AiMark;
                     is_player_turn = true;
                     return;
                 }
@@ -41,6 +45,35 @@ void AiMove(int screenSize) {
     }
 }
 
+void DrawMarks(int screenSize) {
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+                int centerX = 75 + col * 150 + 75;
+                int centerY = 75 + row * 150 + 75;
+            if (board[row][col] == X) {
+                DrawLine(centerX + 65, centerY + 65, centerX - 65, centerY - 65, RED);
+                DrawLine(centerX - 65, centerY + 65, centerX + 65, centerY - 65, RED);
+            } else if (board[row][col] == O) {
+                DrawCircleLines(centerX, centerY, 65, BLUE);
+            }
+        }
+    }
+}
+
+
+bool CheckWin(Cell mark) {
+    for (int i = 0; i < 3; i++) {
+        if ((board[i][0] == mark && board[i][1] == mark && board[i][2] == mark) ||
+            (board[0][i] == mark && board[1][i] == mark && board[2][i] == mark)) {
+            return true;
+        }
+    }
+    if ((board[0][0] == mark && board[1][1] == mark && board[2][2] == mark) ||
+        (board[0][2] == mark && board[1][1] == mark && board[2][0] == mark)) {
+        return true;
+    }
+    return false;
+}
 
 int main(void)
 {
@@ -61,7 +94,7 @@ int main(void)
             ClearBackground(WHITE);
             DrawGrid(screenSize);
             // DrawText("penis!", 190, 200, 20, BEIGE);
-            
+            DrawMarks(screenSize);
         EndDrawing();
         
     }
