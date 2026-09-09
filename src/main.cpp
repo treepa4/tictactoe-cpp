@@ -1,11 +1,21 @@
 #include <raylib.h>
 
+void DrawGrid(int screensize)
+{
+    for (int i = 0; i < 2; i++)
+    {
+        DrawLine(225+(i*150), 75, 225+(i*150), screensize-75, BEIGE);
+        DrawLine(75, 225+(i*150), screensize-75, 225+(i*150), BEIGE);
+    }
+
+}
+
+
 int main(void)
 {
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenSize = 600;
 
-    InitWindow(screenWidth, screenHeight, "Я СОСУ ЧЛЕН");
+    InitWindow(screenSize, screenSize, "Я СОСУ ЧЛЕН");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -16,9 +26,9 @@ int main(void)
 
         BeginDrawing();
 
-            ClearBackground(RAYWHITE);
-
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+            ClearBackground(WHITE);
+            DrawGrid(screenSize);
+            // DrawText("penis!", 190, 200, 20, BEIGE);
 
         EndDrawing();
         
